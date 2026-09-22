@@ -33,5 +33,6 @@ void update_lists_clear(UpdateLists* lists);
 void update_lists_delete(UpdateLists* lists);
 
 BOOL parse_command(const char* command, UpdateLists* lists);
+unsigned int ipstr_to_uint(const char* s_ip);
 
 #endif // COMMAND_H

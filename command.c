@@ -21,7 +21,7 @@ static slist* split_string(const char* text, const char* sep)
 	return list;
 }
 
-static unsigned int ipstr_to_uint(const char* s_ip)
+unsigned int ipstr_to_uint(const char* s_ip)
 {
 	slist* ip_list = split_string(s_ip, ".");
 	if (slist_count(ip_list) != 4)

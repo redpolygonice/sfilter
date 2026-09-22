@@ -2,6 +2,7 @@
 #include "nlist.h"
 #include "slist.h"
 #include "command.h"
+#include "data.h"
 
 #include <linux/slab.h>
 #include <linux/string.h>
@@ -15,6 +16,19 @@ void filter_init(void)
 	ip_list = nlist_new();
 	word_list = slist_new();
 	update_lists = update_lists_new();
+
+	if (!data_load(DATA_FILE_NAME, ip_list, word_list))
+		pr_info("Netfilter: Init data lists empty!\n");
+	else
+	{
+		pr_info("Netfilter: Init data lists:\n");
+
+		if (!nlist_empty(ip_list))
+			nlist_print_ip(ip_list);
+
+		if (!slist_empty(word_list))
+			slist_print(word_list);
+	}
 }
 
 void filter_clear(void)

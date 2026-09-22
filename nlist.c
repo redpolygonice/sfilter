@@ -33,7 +33,7 @@ void nlist_push(nlist* list, unsigned int data)
 	}
 	else
 	{
-		node->prev = list->curr;
+		node->prev = list->last;
 		node->prev->next = node;
 		node->next = NULL;
 	}
@@ -223,9 +223,8 @@ void nlist_append_unique(nlist* dest, nlist* src)
 
 	while (src_node)
 	{
-		if (nlist_find(dest, src_node->data))
-			continue;
-		nlist_push(dest, src_node->data);
+		if (!nlist_find(dest, src_node->data))
+			nlist_push(dest, src_node->data);
 		src_node = src_node->next;
 	}
 }

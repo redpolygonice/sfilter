@@ -33,7 +33,7 @@ void slist_push(slist* list, char* data)
 	}
 	else
 	{
-		node->prev = list->curr;
+		node->prev = list->last;
 		node->prev->next = node;
 		node->next = NULL;
 	}
@@ -108,7 +108,7 @@ BOOL slist_last(slist* list)
 
 BOOL slist_next(slist* list)
 {
-	if (!list->curr->next)
+	if (!list->curr || !list->curr->next)
 	{
 		list->curr = NULL;
 		return FALSE;
@@ -120,7 +120,7 @@ BOOL slist_next(slist* list)
 
 BOOL slist_prev(slist* list)
 {
-	if (!list->curr->prev)
+	if (!list->curr || !list->curr->prev)
 		return FALSE;
 
 	list->curr = list->curr->prev;
@@ -253,9 +253,8 @@ void slist_append_unique(slist* dest, slist* src)
 
 	while (src_node)
 	{
-		if (slist_find(dest, src_node->data))
-			continue;
-		slist_push_copy(dest, src_node->data);
+		if (!slist_find(dest, src_node->data))
+			slist_push_copy(dest, src_node->data);
 		src_node = src_node->next;
 	}
 }
