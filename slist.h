@@ -3,18 +3,18 @@
 
 #include "types.h"
 
-typedef struct Node
+typedef struct slist_node
 {
 	char* data;
-	struct Node* next;
-	struct Node* prev;
-} Node;
+	struct slist_node* next;
+	struct slist_node* prev;
+} slist_node;
 
 typedef struct slist
 {
-	Node* first;
-	Node* last;
-	Node* curr;
+	slist_node* first;
+	slist_node* last;
+	slist_node* curr;
 } slist;
 
 slist* slist_new(void);

@@ -22,7 +22,7 @@ void slist_init(slist* slist)
 
 void slist_push(slist* list, char* data)
 {
-	Node* node = (Node*)kmalloc(sizeof(Node), GFP_KERNEL);
+	slist_node* node = (slist_node*)kmalloc(sizeof(slist_node), GFP_KERNEL);
 	node->data = data;
 
 	if (list->first == NULL)
@@ -50,7 +50,7 @@ void slist_push_copy(slist* list, const char* data)
 
 BOOL slist_find(slist* list, const char* data)
 {
-	Node* node = list->first;
+	slist_node* node = list->first;
 	if (!node)
 		return FALSE;
 
@@ -70,7 +70,7 @@ BOOL slist_find(slist* list, const char* data)
 
 BOOL slist_find_part(slist* list, const char* data)
 {
-	Node* node = list->first;
+	slist_node* node = list->first;
 	if (!node)
 		return FALSE;
 
@@ -145,7 +145,7 @@ void slist_remove(slist* list, BOOL delete)
 	if (!list->curr)
 		return;
 
-	Node* curr = list->curr;
+	slist_node* curr = list->curr;
 
 	if (list->curr->prev)
 	{
@@ -189,7 +189,7 @@ void slist_remove(slist* list, BOOL delete)
 
 int slist_count(slist* list)
 {
-	Node* node = list->first;
+	slist_node* node = list->first;
 	if (!node)
 		return 0;
 
@@ -210,13 +210,13 @@ BOOL slist_empty(slist* list)
 
 void slist_clear(slist* list, BOOL delete)
 {
-	Node* node = list->first;
+	slist_node* node = list->first;
 	if (!node)
 		return;
 
 	while (node)
 	{
-		Node* temp = node->next;
+		slist_node* temp = node->next;
 		if (delete && node->data)
 			kfree(node->data);
 		kfree(node);
@@ -230,11 +230,12 @@ void slist_delete(slist* list, BOOL delete)
 {
 	slist_clear(list, delete);
 	kfree(list);
+	list = NULL;
 }
 
 void slist_append(slist* dest, slist* src)
 {
-	Node* src_node = src->first;
+	slist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -247,7 +248,7 @@ void slist_append(slist* dest, slist* src)
 
 void slist_append_unique(slist* dest, slist* src)
 {
-	Node* src_node = src->first;
+	slist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -261,7 +262,7 @@ void slist_append_unique(slist* dest, slist* src)
 
 void slist_remove_list(slist* dest, slist* src)
 {
-	Node* src_node = src->first;
+	slist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -275,7 +276,7 @@ void slist_remove_list(slist* dest, slist* src)
 
 void slist_print(slist* list)
 {
-	Node* node = list->first;
+	slist_node* node = list->first;
 	if (!node)
 		return;
 

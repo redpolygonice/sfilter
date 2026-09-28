@@ -22,7 +22,7 @@ void nlist_init(nlist* list)
 
 void nlist_push(nlist* list, unsigned int data)
 {
-	NNode* node = (NNode*)kmalloc(sizeof(NNode), GFP_KERNEL);
+	nlist_node* node = (nlist_node*)kmalloc(sizeof(nlist_node), GFP_KERNEL);
 	node->data = data;
 
 	if (list->first == NULL)
@@ -44,7 +44,7 @@ void nlist_push(nlist* list, unsigned int data)
 
 BOOL nlist_find(nlist* list, unsigned int data)
 {
-	NNode* node = list->first;
+	nlist_node* node = list->first;
 	if (!node)
 		return FALSE;
 
@@ -119,7 +119,7 @@ void nlist_remove(nlist* list)
 	if (!list->curr)
 		return;
 
-	NNode* curr = list->curr;
+	nlist_node* curr = list->curr;
 
 	if (list->curr->prev)
 	{
@@ -161,7 +161,7 @@ void nlist_remove(nlist* list)
 
 int nlist_count(nlist* list)
 {
-	NNode* node = list->first;
+	nlist_node* node = list->first;
 	if (!node)
 		return 0;
 
@@ -182,13 +182,13 @@ BOOL nlist_empty(nlist* list)
 
 void nlist_clear(nlist* list)
 {
-	NNode* node = list->first;
+	nlist_node* node = list->first;
 	if (!node)
 		return;
 
 	while (node)
 	{
-		NNode* temp = node->next;
+		nlist_node* temp = node->next;
 		kfree(node);
 		node = temp;
 	}
@@ -200,11 +200,12 @@ void nlist_delete(nlist* list)
 {
 	nlist_clear(list);
 	kfree(list);
+	list = NULL;
 }
 
 void nlist_append(nlist* dest, nlist* src)
 {
-	NNode* src_node = src->first;
+	nlist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -217,7 +218,7 @@ void nlist_append(nlist* dest, nlist* src)
 
 void nlist_append_unique(nlist* dest, nlist* src)
 {
-	NNode* src_node = src->first;
+	nlist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -231,7 +232,7 @@ void nlist_append_unique(nlist* dest, nlist* src)
 
 void nlist_remove_list(nlist* dest, nlist* src)
 {
-	NNode* src_node = src->first;
+	nlist_node* src_node = src->first;
 	if (!src_node)
 		return;
 
@@ -245,7 +246,7 @@ void nlist_remove_list(nlist* dest, nlist* src)
 
 void nlist_print(nlist* list)
 {
-	NNode* node = list->first;
+	nlist_node* node = list->first;
 	if (!node)
 		return;
 
@@ -258,7 +259,7 @@ void nlist_print(nlist* list)
 
 void nlist_print_ip(nlist* list)
 {
-	NNode* node = list->first;
+	nlist_node* node = list->first;
 	if (!node)
 		return;
 

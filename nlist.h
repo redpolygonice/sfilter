@@ -3,18 +3,18 @@
 
 #include "types.h"
 
-typedef struct NNode
+typedef struct nlist_node
 {
 	unsigned int data;
-	struct NNode* next;
-	struct NNode* prev;
-} NNode;
+	struct nlist_node* next;
+	struct nlist_node* prev;
+} nlist_node;
 
 typedef struct nlist
 {
-	NNode* first;
-	NNode* last;
-	NNode* curr;
+	nlist_node* first;
+	nlist_node* last;
+	nlist_node* curr;
 } nlist;
 
 nlist* nlist_new(void);
