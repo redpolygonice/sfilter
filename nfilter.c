@@ -144,14 +144,16 @@ static BOOL process_ip(struct sk_buff *skb)
 	// 	ip_header->protocol, &ip_header->saddr, &ip_header->daddr);
 
 	unsigned int src_ip = ip_header->saddr;
-	if (!filter_process_ip(src_ip, 0))
+	unsigned int dest_ip = ip_header->daddr;
+	unsigned int detected_ip = filter_process_ip(src_ip, dest_ip);
+	if (detected_ip)
 	{
 		char str_ip[16] = {0};
 		sprintf(str_ip, "%u.%u.%u.%u"
-			, (src_ip) & 0xff
-			, (src_ip >> 8) & 0xff
-			, (src_ip >> 16) & 0xff
-			, (src_ip >> 24) & 0xff);
+			, (detected_ip) & 0xff
+			, (detected_ip >> 8) & 0xff
+			, (detected_ip >> 16) & 0xff
+			, (detected_ip >> 24) & 0xff);
 		pr_info("Block IP [%s]", str_ip);
 
 		char buffer[23] = {0};

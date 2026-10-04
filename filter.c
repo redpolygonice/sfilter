@@ -1,5 +1,5 @@
 #include "filter.h"
-#include "nlist.h"
+#include "nset.h"
 #include "slist.h"
 #include "command.h"
 #include "data.h"
@@ -7,24 +7,24 @@
 #include <linux/slab.h>
 #include <linux/string.h>
 
-static nlist* ip_list = NULL;
+static nset* ip_set = NULL;
 static slist* word_list = NULL;
 static UpdateLists* update_lists = NULL;
 
 void filter_init(void)
 {
-	ip_list = nlist_new();
+	ip_set = nset_new();
 	word_list = slist_new();
 	update_lists = update_lists_new();
 
-	if (!data_load(DATA_FILE_NAME, ip_list, word_list))
+	if (!data_load(DATA_FILE_NAME, ip_set, word_list))
 		pr_info("Netfilter: Init data lists empty!\n");
 	else
 	{
 		pr_info("Netfilter: Init data lists:\n");
 
-		if (!nlist_empty(ip_list))
-			nlist_print_ip(ip_list);
+		if (!nset_empty(ip_set))
+			nset_print_ip(ip_set);
 
 		if (!slist_empty(word_list))
 			slist_print(word_list);
@@ -34,7 +34,7 @@ void filter_init(void)
 void filter_clear(void)
 {
 	update_lists_delete(update_lists);
-	nlist_delete(ip_list);
+	nset_delete(ip_set);
 	slist_delete(word_list, TRUE);
 }
 
@@ -46,11 +46,11 @@ void filter_update_lists(const char*command)
 
 	// Add IP
 	if (!nlist_empty(update_lists->ip_list_add))
-		nlist_append_unique(ip_list, update_lists->ip_list_add);
+		nset_append_list(ip_set, update_lists->ip_list_add);
 
 	// Remove IP
 	if (!nlist_empty(update_lists->ip_list_rem))
-		nlist_remove_list(ip_list, update_lists->ip_list_rem);
+		nset_remove_list(ip_set, update_lists->ip_list_rem);
 
 	// Add word
 	if (!slist_empty(update_lists->word_list_add))
@@ -62,16 +62,16 @@ void filter_update_lists(const char*command)
 
 	// Clear IPs
 	if (update_lists->clear_ips)
-		nlist_clear(ip_list);
+		nset_clear(ip_set);
 
 	// Clear words
 	if (update_lists->clear_words)
 		slist_clear(word_list, TRUE);
 
-	if (!nlist_empty(ip_list))
+	if (!nset_empty(ip_set))
 	{
 		pr_info("Netfilter: IP list\n");
-		nlist_print_ip(ip_list);
+		nset_print_ip(ip_set);
 	}
 
 	if (!slist_empty(word_list))
@@ -81,12 +81,15 @@ void filter_update_lists(const char*command)
 	}
 }
 
-BOOL filter_process_ip(unsigned int src_ip, unsigned int dest_ip)
+unsigned int filter_process_ip(unsigned int src_ip, unsigned int dest_ip)
 {
-	if (nlist_find(ip_list, src_ip))
-		return FALSE;
+	if (nset_find(ip_set, src_ip))
+		return src_ip;
 
-	return TRUE;
+	if (nset_find(ip_set, dest_ip))
+		return dest_ip;
+
+	return 0;
 }
 
 BOOL filter_process_data(const char* data, char** word)

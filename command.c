@@ -37,6 +37,7 @@ unsigned int ipstr_to_uint(const char* s_ip)
 		n_ip |= (chunk << i++ * 8);
 	}
 
+	slist_delete(ip_list, TRUE);
 	return n_ip;
 }
 

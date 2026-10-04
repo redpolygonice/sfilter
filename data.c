@@ -11,7 +11,7 @@ enum
 	WORD
 };
 
-BOOL data_load(const char* file_name, nlist* ip_list, slist* word_list)
+BOOL data_load(const char* file_name, nset* ip_set, slist* word_list)
 {
 	struct file *file = filp_open(file_name, O_RDONLY, 0);
 	if (IS_ERR(file))
@@ -61,7 +61,7 @@ BOOL data_load(const char* file_name, nlist* ip_list, slist* word_list)
 			if (type == IP)
 			{
 				unsigned int ip = ipstr_to_uint(chunk);
-				nlist_push(ip_list, ip);
+				nset_insert(ip_set, ip);
 			}
 			else if (type == WORD)
 			{
