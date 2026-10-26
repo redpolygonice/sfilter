@@ -1,8 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "slist.h"
-#include "nlist.h"
+#include "container.h"
 
 #define IP_CMD "ip"
 #define WORD_CMD "word"

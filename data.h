@@ -2,8 +2,7 @@
 #define DATA_H
 
 #include "types.h"
-#include "nset.h"
-#include "slist.h"
+#include "container.h"
 
 BOOL data_load(const char* file_name, nset* ip_set, slist* word_list);
 

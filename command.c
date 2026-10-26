@@ -24,7 +24,7 @@ static slist* split_string(const char* text, const char* sep)
 unsigned int ipstr_to_uint(const char* s_ip)
 {
 	slist* ip_list = split_string(s_ip, ".");
-	if (slist_count(ip_list) != 4)
+	if (slist_size(ip_list) != 4)
 		return 0;
 
 	unsigned int n_ip = 0;

@@ -39,7 +39,7 @@ static const struct proc_ops proc_file_fops = {
 };
 
 // FIFO for reading by user
-#define FIFO_SIZE 1024 * 5
+#define FIFO_SIZE 4192
 struct kfifo_rec_ptr_2 read_fifo;
 static DEFINE_MUTEX(fifo_mutex);
 
@@ -127,7 +127,7 @@ static BOOL process_skb_data(struct sk_buff *skb)
 		sprintf(buffer, "Word [%s]\n", word);
 		kfree(word);
 
-		mutex_lock(&fifo_mutex);
+		mutex_lock_interruptible(&fifo_mutex);
 		kfifo_in(&read_fifo, buffer, strlen(buffer));
 		mutex_unlock(&fifo_mutex);
 		return FALSE;
@@ -159,7 +159,7 @@ static BOOL process_ip(struct sk_buff *skb)
 		char buffer[23] = {0};
 		sprintf(buffer, "IP [%s]\n", str_ip);
 
-		mutex_lock(&fifo_mutex);
+		mutex_lock_interruptible(&fifo_mutex);
 		kfifo_in(&read_fifo, buffer, strlen(buffer));
 		mutex_unlock(&fifo_mutex);
 		return FALSE;
